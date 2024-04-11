@@ -7,12 +7,6 @@ class Puzzle:
         self.current_state = initial_state
         self.moves = ""
 
-    def load_from_file(self, filename):
-        with open(filename, 'r') as file:
-            lines = file.readlines()
-            self.size = tuple(map(int, lines[0].split()))
-            self.current_state = [list(map(int, line.split())) for line in lines[1:]]
-
     def __str__(self):
         output = ""
         for row in self.current_state:
