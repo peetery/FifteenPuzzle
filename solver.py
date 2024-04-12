@@ -22,10 +22,10 @@ class Solver:
             for direction in search_order:
                 new_state = copy.deepcopy(current_state)
                 new_state.move(direction)
-                if tuple(new_state.layout.flatten()) not in visited_states:
+                if tuple(new_state.layout.flatten()) not in visited:
                     if len(new_state.moves) > max_depth:
                         max_depth = len(new_state.moves)
-                    if np.array_equal(new_state, new_state.get_target_state):
+                    if Puzzle.is_solved(new_state):
                         end = time.time()
                         duration_time = end - start
                         # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
