@@ -19,8 +19,6 @@ class Solver:
         while not queue.empty():
             current_state = queue.get()
             processed_states += 1
-            if Puzzle.is_solved(current_state):
-                return 1
             for direction in search_order:
                 new_state = copy.deepcopy(current_state)
                 new_state.move(direction)
