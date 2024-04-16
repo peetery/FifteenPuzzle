@@ -34,9 +34,9 @@ class Puzzle:
             new_col -= 1
         elif direction == "R" and empty_col < self.size[1] - 1:
             new_col += 1
-        elif direction == "U" and empty_row < self.size[0] - 1:
+        elif direction == "U" and empty_row > 0:
             new_row -= 1
-        elif direction == "D" and empty_row > 0:
+        elif direction == "D" and empty_row < self.size[0] - 1:
             new_row += 1
 
         new_state[empty_row][empty_col] = new_state[new_row][new_col]

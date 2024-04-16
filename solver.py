@@ -24,56 +24,59 @@ class Solver:
             for direction in search_order:
                 new_state = copy.deepcopy(current_state)
                 new_state.move(direction)
-                if tuple(new_state.layout.flatten()) not in visited:
+                if tuple(map(tuple, new_state.current_state)) not in visited:
                     if len(new_state.moves) > max_depth:
                         max_depth = len(new_state.moves)
                     if Puzzle.is_solved(new_state):
                         end = time.time()
                         duration_time = end - start
                         # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
-                        return True
+                        return new_state
                     else:
                         queue.put(new_state)
-                        visited.add(tuple(new_state.layout.flatten()))
+                        visited.add(tuple(map(tuple, new_state.current_state)))
                         visited_states += 1
         return False
 
-    # DO DOKOŃCZENIA - nie do końca mi pasuje ta implementacja, trochę inaczej to trzeba chyba zrobić
+    # DO DOKOŃCZENIA - teraz to nie działa XD
     @staticmethod
     def dfs(initial_state, search_order):
         start = time.time()
-        max_depth = 0
         processed_states = 0
         visited_states = 1
-        visited = set()
+        visited = {}
 
-        stack = []
-        stack.append(initial_state, 0)
+        stack = [(initial_state, 0)]
         max_allowed_depth = 20
+        max_depth = 0
 
         while stack:
-            current_state, depth = stack.pop()
+            current_board, current_depth = stack.pop()
+            current_state = tuple(map(tuple, current_board.current_state))
             processed_states += 1
 
-            if depth >= max_allowed_depth:
+            if current_depth >= max_allowed_depth:
                 continue
 
-            if Puzzle.is_solved(current_state):
+            if current_state in visited and visited[current_state] <= current_depth:
+                continue
+
+            visited[current_state] = current_depth
+
+            if Puzzle.is_solved(current_board):
                 end = time.time()
                 duration_time = end - start
                 # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
-                return True
-
-            visited.add(tuple(current_state.layout_flatten()))
+                return current_board
 
             for direction in search_order:
-                new_state = copy.deepcopy(current_state)
+                new_state = copy.deepcopy(current_board)
                 new_state.move(direction)
-                if tuple(new_state.layout.flatten()) not in visited:
-                    stack.append((new_state, depth + 1))
+                if tuple(map(tuple, new_state.current_state)) not in visited:
+                    stack.append((new_state, current_depth + 1))
                     visited_states += 1
-                    if depth + 1 > max_depth:
-                        max_depth = depth
+                    if current_depth + 1 > max_depth:
+                        max_depth = current_depth + 1
 
             return False
 
