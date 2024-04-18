@@ -44,7 +44,7 @@ class Solver:
         start = time.time()
         processed_states = 0
         visited_states = 1
-        visited = {}
+        visited = set()
 
         stack = [(initial_state, 0)]
         max_allowed_depth = 20
@@ -52,16 +52,16 @@ class Solver:
 
         while stack:
             current_board, current_depth = stack.pop()
-            current_state = tuple(map(tuple, current_board.current_state))
+            current_state_hash = hash(tuple(map(tuple, current_board.current_state)))
             processed_states += 1
 
             if current_depth >= max_allowed_depth:
                 continue
 
-            if current_state in visited and visited[current_state] <= current_depth:
+            if current_state_hash in visited:
                 continue
 
-            visited[current_state] = current_depth
+            visited.add(current_state_hash)
 
             if Puzzle.is_solved(current_board):
                 end = time.time()
@@ -72,13 +72,14 @@ class Solver:
             for direction in search_order:
                 new_state = copy.deepcopy(current_board)
                 new_state.move(direction)
-                if tuple(map(tuple, new_state.current_state)) not in visited:
+                new_state_hash = hash(tuple(map(tuple, new_state.current_state)))
+                if new_state_hash not in visited:
                     stack.append((new_state, current_depth + 1))
                     visited_states += 1
                     if current_depth + 1 > max_depth:
                         max_depth = current_depth + 1
 
-            return False
+        return False
 
     # DO ZROBIENIA
     @staticmethod
