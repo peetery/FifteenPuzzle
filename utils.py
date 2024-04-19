@@ -14,13 +14,6 @@ class Utils:
             return size, initial_state
 
     @staticmethod
-    def save_puzzle_to_file(filename, size, state):
-        with open(filename, 'w') as file:
-            file.write(f"{size[0]} {size[1]}\n")
-            for row in state:
-                file.write(" ".join(str(num) for num in row) + "\n")
-
-    @staticmethod
     def save_solution_to_file(moves, visited_states_num, processed_states_num, max_reached_depth, calculation_time):
         rounded_calculation_time = round(calculation_time * 100, 3)
         first_index = sys.argv[4].find('_')

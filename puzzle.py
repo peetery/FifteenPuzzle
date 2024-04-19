@@ -49,8 +49,6 @@ class Puzzle:
         new_state[empty_row][empty_col] = new_state[new_row][new_col]
         new_state[new_row][new_col] = self.current_state[empty_row][empty_col]
 
-        # sprawdzamy czy nowy stan różni się od obecnego, jest to przydatne aby uniknąć bezcelowego kopiowania
-        # gdy zadany ruch wykracza poza granice planszy i nie zostanie wykonany
         if not np.array_equal(self.current_state, new_state):
             self.current_state = new_state
             self.moves += direction

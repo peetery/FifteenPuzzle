@@ -71,7 +71,6 @@ class Solver:
             if Puzzle.is_solved(current_puzzle):
                 end = time.time()
                 duration_time = end - start
-                print(duration_time)
                 Utils.save_solution_to_file(current_puzzle.moves, visited_states,
                                             processed_states, max_depth, duration_time)
                 return current_puzzle
