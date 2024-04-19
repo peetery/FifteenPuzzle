@@ -19,66 +19,67 @@ class Solver:
         queue = Queue()
         queue.put(initial_state)
         while not queue.empty():
-            current_state = queue.get()
+            current_puzzle = queue.get()
             processed_states += 1
+            available_directions = current_puzzle.get_available_moves()
             for direction in search_order:
-                new_state = copy.deepcopy(current_state)
-                new_state.move(direction)
-                if tuple(map(tuple, new_state.current_state)) not in visited:
-                    if len(new_state.moves) > max_depth:
-                        max_depth = len(new_state.moves)
-                    if Puzzle.is_solved(new_state):
-                        end = time.time()
-                        duration_time = end - start
-                        # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
-                        return new_state
-                    else:
-                        queue.put(new_state)
-                        visited.add(tuple(map(tuple, new_state.current_state)))
-                        visited_states += 1
+                if direction in available_directions:
+                    new_puzzle = copy.deepcopy(current_puzzle)
+                    new_puzzle.move(direction)
+                    new_state_flat = tuple(map(tuple, new_puzzle.current_state))
+                    if new_state_flat not in visited:
+                        if len(new_puzzle.moves) > max_depth:
+                            max_depth = len(new_puzzle.moves)
+                        if Puzzle.is_solved(new_puzzle):
+                            end = time.time()
+                            duration_time = end - start
+                            print(duration_time)
+                            # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                            return new_puzzle
+                        else:
+                            queue.put(new_puzzle)
+                            visited.add(new_state_flat)
+                            visited_states += 1
         return False
 
-    # DO DOKOŃCZENIA - teraz to nie działa XD
     @staticmethod
     def dfs(initial_state, search_order):
         start = time.time()
         processed_states = 0
         visited_states = 1
-        visited = set()
+        visited = {}
 
         stack = [(initial_state, 0)]
         max_allowed_depth = 20
         max_depth = 0
 
         while stack:
-            current_board, current_depth = stack.pop()
-            current_state_hash = hash(tuple(map(tuple, current_board.current_state)))
+            current_puzzle, current_depth = stack.pop()
+            current_state = tuple(map(tuple, current_puzzle.current_state))
             processed_states += 1
 
-            if current_depth >= max_allowed_depth:
+            if current_state in visited and visited[current_state] <= current_depth:
                 continue
 
-            if current_state_hash in visited:
-                continue
+            visited[current_state] = current_depth
 
-            visited.add(current_state_hash)
-
-            if Puzzle.is_solved(current_board):
+            if Puzzle.is_solved(current_puzzle):
                 end = time.time()
                 duration_time = end - start
+                print(duration_time)
                 # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
-                return current_board
+                return current_puzzle
 
-            for direction in search_order:
-                new_state = copy.deepcopy(current_board)
-                new_state.move(direction)
-                new_state_hash = hash(tuple(map(tuple, new_state.current_state)))
-                if new_state_hash not in visited:
-                    stack.append((new_state, current_depth + 1))
-                    visited_states += 1
-                    if current_depth + 1 > max_depth:
-                        max_depth = current_depth + 1
-
+            available_directions = current_puzzle.get_available_moves()
+            if current_depth < max_allowed_depth:
+                for direction in search_order:
+                    if direction in available_directions:
+                        new_puzzle = copy.deepcopy(current_puzzle)
+                        new_puzzle.move(direction)
+                        stack.append((new_puzzle, current_depth + 1))
+                        visited_states += 1
+                        if current_depth + 1 > max_depth:
+                            max_depth = current_depth + 1
         return False
 
     # DO ZROBIENIA

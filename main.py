@@ -7,6 +7,8 @@ if __name__ == '__main__':
     puzzle = Puzzle(size, initial_state)
     print("Aktualny stan:")
     print(puzzle)
-    print(Solver.dfs(puzzle, "LRUD"))
+    # print(Solver.dfs(puzzle, "LRUD"))
+    # print("\n\n\n")
+    print(Solver.bfs(puzzle, "LRUD"))
 
     Utils.save_puzzle_to_file("modifiedPuzzle.txt", puzzle.size, puzzle.current_state)

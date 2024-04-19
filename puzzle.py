@@ -83,3 +83,18 @@ class Puzzle:
 
         return neighbors
 
+    def get_available_moves(self):
+        available_moves = []
+        empty_row, empty_col = self.find_empty_cell()
+
+        if empty_row > 0:
+            available_moves.append("U")
+        if empty_row < self.size[0] - 1:
+            available_moves.append("D")
+        if empty_col > 0:
+            available_moves.append("L")
+        if empty_col < self.size[1] - 1:
+            available_moves.append("R")
+
+        return available_moves
+
