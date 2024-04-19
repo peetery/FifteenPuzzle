@@ -9,6 +9,9 @@ if __name__ == '__main__':
     print(puzzle)
     # print(Solver.dfs(puzzle, "LRUD"))
     # print("\n\n\n")
-    print(Solver.bfs(puzzle, "LRUD"))
+    print(Solver.a_star_hamming(puzzle))
+
+    print("\n\n\n")
+    print(Solver.a_star_manhattan(puzzle))
 
     Utils.save_puzzle_to_file("modifiedPuzzle.txt", puzzle.size, puzzle.current_state)

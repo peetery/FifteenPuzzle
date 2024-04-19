@@ -1,4 +1,5 @@
 import numpy as np
+from utils import Utils
 
 class Puzzle:
     def __init__(self, size, initial_state):
@@ -61,28 +62,6 @@ class Puzzle:
     def is_solved(self):
         return np.array_equal(self.current_state, self.get_target_state())
 
-    def get_neighbors(self):
-        neighbors = []
-        empty_row, empty_col = self.find_empty_cell()
-        for direction in ["L", "R", "U", "D"]:
-            new_row, new_col = empty_row, empty_col
-            if direction == "L" and empty_col > 0:
-                new_col -= 1
-            elif direction == "R" and empty_col < self.size[1] - 1:
-                new_col += 1
-            elif direction == "U" and empty_row > 0:
-                new_row -= 1
-            elif direction == "D" and empty_row < self.size[0] - 1:
-                new_row += 1
-
-            if new_row != empty_row or new_col != empty_col:
-                neighbor = np.copy(self.current_state)
-                neighbor[empty_row][empty_col] = neighbor[new_row][new_col]
-                neighbor[new_row][new_col] = self.current_state[empty_row][empty_col]
-                neighbors.append((neighbor, direction))
-
-        return neighbors
-
     def get_available_moves(self):
         available_moves = []
         empty_row, empty_col = self.find_empty_cell()
@@ -97,4 +76,10 @@ class Puzzle:
             available_moves.append("R")
 
         return available_moves
+
+    def __lt__(self, other):
+        return len(self.moves) > len(other.moves)
+
+    def __eq__(self, other):
+        return len(self.moves) == len(other.moves)
 

@@ -10,14 +10,14 @@ from utils import Utils
 
 class Solver:
     @staticmethod
-    def bfs(initial_state, search_order):
+    def bfs(initial_puzzle, search_order):
         start = time.time()
         max_depth = 0
         processed_states = 0
         visited_states = 1
         visited = set()
         queue = Queue()
-        queue.put(initial_state)
+        queue.put(initial_puzzle)
         while not queue.empty():
             current_puzzle = queue.get()
             processed_states += 1
@@ -43,25 +43,25 @@ class Solver:
         return False
 
     @staticmethod
-    def dfs(initial_state, search_order):
+    def dfs(initial_puzzle, search_order):
         start = time.time()
         processed_states = 0
         visited_states = 1
         visited = {}
 
-        stack = [(initial_state, 0)]
+        stack = [(initial_puzzle, 0)]
         max_allowed_depth = 20
         max_depth = 0
 
         while stack:
             current_puzzle, current_depth = stack.pop()
-            current_state = tuple(map(tuple, current_puzzle.current_state))
+            current_state_flat = tuple(map(tuple, current_puzzle.current_state))
             processed_states += 1
 
-            if current_state in visited and visited[current_state] <= current_depth:
+            if current_state_flat in visited and visited[current_state_flat] <= current_depth:
                 continue
 
-            visited[current_state] = current_depth
+            visited[current_state_flat] = current_depth
 
             if Puzzle.is_solved(current_puzzle):
                 end = time.time()
@@ -84,28 +84,84 @@ class Solver:
 
     # DO ZROBIENIA
     @staticmethod
-    def a_star_hamming(initial_state):
+    def a_star_hamming(initial_puzzle):
         start = time.time()
         max_depth = 0
         processed_states = 0
         visited_states = 1
         priority_queue = PriorityQueue()
         priority_queue.put(
-            (len(initial_state.moves)
-             + Utils.hamming_distance(initial_state, initial_state.get_traget_state)),
-            initial_state)
+            (len(initial_puzzle.moves)
+             + Utils.hamming_distance(initial_puzzle.current_state, initial_puzzle.get_target_state()),
+            initial_puzzle))
         visited = set()
+
+        while not priority_queue.empty():
+            current_puzzle = priority_queue.get()[1]
+            processed_states += 1
+
+            if Puzzle.is_solved(current_puzzle):
+                end = time.time()
+                duration_time = end - start
+                print(duration_time)
+                # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                return current_puzzle
+
+            available_directions = current_puzzle.get_available_moves()
+            for direction in "LRUD":
+                if direction in available_directions:
+                    new_puzzle = copy.deepcopy(current_puzzle)
+                    new_puzzle.move(direction)
+                    new_state_flat = tuple(map(tuple, new_puzzle.current_state))
+                    if new_state_flat not in visited:
+                        priority_queue.put(
+                                (len(new_puzzle.moves)
+                                 + Utils.hamming_distance(new_puzzle.current_state, new_puzzle.get_target_state()),
+                                new_puzzle))
+                        visited_states += 1
+                        visited.add(new_state_flat)
+                        if len(new_puzzle.moves) > max_depth:
+                            max_depth = len(new_puzzle.moves)
+        return False
 
     # DO ZROBIENIA
     @staticmethod
-    def a_star_manhattan(initial_state):
+    def a_star_manhattan(initial_puzzle):
         start = time.time()
         max_depth = 0
         processed_states = 0
         visited_states = 1
         priority_queue = PriorityQueue()
         priority_queue.put(
-            (len(initial_state.moves)
-             + Utils.manhattan_distance(initial_state, initial_state.get_traget_state)),
-            initial_state)
+            (len(initial_puzzle.moves)
+             + Utils.manhattan_distance(initial_puzzle.current_state, initial_puzzle.get_target_state()),
+             initial_puzzle))
         visited = set()
+
+        while not priority_queue.empty():
+            current_puzzle = priority_queue.get()[1]
+            processed_states += 1
+
+            if Puzzle.is_solved(current_puzzle):
+                end = time.time()
+                duration_time = end - start
+                print(duration_time)
+                # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                return current_puzzle
+
+            available_directions = current_puzzle.get_available_moves()
+            for direction in "LRUD":
+                if direction in available_directions:
+                    new_puzzle = copy.deepcopy(current_puzzle)
+                    new_puzzle.move(direction)
+                    new_state_flat = tuple(map(tuple, new_puzzle.current_state))
+                    if new_state_flat not in visited:
+                        priority_queue.put(
+                                (len(new_puzzle.moves)
+                                 + Utils.manhattan_distance(new_puzzle.current_state, new_puzzle.get_target_state()),
+                                new_puzzle))
+                        visited_states += 1
+                        visited.add(new_state_flat)
+                        if len(new_puzzle.moves) > max_depth:
+                            max_depth = len(new_puzzle.moves)
+        return False

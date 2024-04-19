@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Utils:
     @staticmethod
     def load_puzzle_from_file(filename):
@@ -32,6 +35,7 @@ class Utils:
             for j in range(size):
                 num = state[i][j]
                 if num != 0:
-                    target_row, target_col = divmod(num - 1, size)
-                    distance += abs(i - target_row) + abs(j - target_col)
+                    cell = np.argwhere(state == num)
+                    target_cell = np.argwhere(target_state == num)
+                    distance += np.sum(np.abs(cell - target_cell))
         return distance
