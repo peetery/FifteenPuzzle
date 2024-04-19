@@ -1,17 +1,27 @@
+import sys
+
 from puzzle import Puzzle
-from utils import Utils
 from solver import Solver
 
 if __name__ == '__main__':
-    size, initial_state = Utils.load_puzzle_from_file("startPuzzle.txt")
-    puzzle = Puzzle(size, initial_state)
-    print("Aktualny stan:")
-    print(puzzle)
-    # print(Solver.dfs(puzzle, "LRUD"))
-    # print("\n\n\n")
-    print(Solver.a_star_hamming(puzzle))
-
-    print("\n\n\n")
-    print(Solver.a_star_manhattan(puzzle))
-
-    Utils.save_puzzle_to_file("modifiedPuzzle.txt", puzzle.size, puzzle.current_state)
+    strategy = sys.argv[1]
+    additional_parameter = sys.argv[2]
+    input_filename = "puzzles/" + sys.argv[3]
+    with open(input_filename, 'r') as input_file:
+        lines = input_file.readlines()
+        size = tuple(map(int, lines[0].split()))
+        initial_state = [list(map(int, line.split())) for line in lines[1:]]
+    original_puzzle = Puzzle(size, initial_state)
+    if strategy == 'bfs':
+        Solver.bfs(original_puzzle, additional_parameter)
+    elif strategy == "dfs":
+        Solver.dfs(original_puzzle, additional_parameter)
+    elif strategy == "astr":
+        if additional_parameter == "hamm":
+            Solver.a_star_hamming(original_puzzle)
+        elif additional_parameter == "manh":
+            Solver.a_star_manhattan(original_puzzle)
+        else:
+            print("Error - invalid parameter.")
+    else:
+        print("Error - invalid strategy.")

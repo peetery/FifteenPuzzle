@@ -4,6 +4,8 @@ import numpy as np
 
 from queue import Queue
 from queue import PriorityQueue
+
+import utils
 from puzzle import Puzzle
 from utils import Utils
 
@@ -33,14 +35,17 @@ class Solver:
                         if Puzzle.is_solved(new_puzzle):
                             end = time.time()
                             duration_time = end - start
-                            print(duration_time)
-                            # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                            Utils.save_solution_to_file(new_puzzle.moves, visited_states,
+                                                        processed_states, max_depth, duration_time)
                             return new_puzzle
                         else:
                             queue.put(new_puzzle)
                             visited.add(new_state_flat)
                             visited_states += 1
-        return False
+        end = time.time()
+        duration_time = end - start
+        Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
+        return None
 
     @staticmethod
     def dfs(initial_puzzle, search_order):
@@ -67,7 +72,8 @@ class Solver:
                 end = time.time()
                 duration_time = end - start
                 print(duration_time)
-                # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                Utils.save_solution_to_file(current_puzzle.moves, visited_states,
+                                            processed_states, max_depth, duration_time)
                 return current_puzzle
 
             available_directions = current_puzzle.get_available_moves()
@@ -80,7 +86,10 @@ class Solver:
                         visited_states += 1
                         if current_depth + 1 > max_depth:
                             max_depth = current_depth + 1
-        return False
+        end = time.time()
+        duration_time = end - start
+        Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
+        return None
 
     # DO ZROBIENIA
     @staticmethod
@@ -103,8 +112,8 @@ class Solver:
             if Puzzle.is_solved(current_puzzle):
                 end = time.time()
                 duration_time = end - start
-                print(duration_time)
-                # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                Utils.save_solution_to_file(current_puzzle.moves, visited_states,
+                                            processed_states, max_depth, duration_time)
                 return current_puzzle
 
             available_directions = current_puzzle.get_available_moves()
@@ -122,7 +131,10 @@ class Solver:
                         visited.add(new_state_flat)
                         if len(new_puzzle.moves) > max_depth:
                             max_depth = len(new_puzzle.moves)
-        return False
+        end = time.time()
+        duration_time = end - start
+        Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
+        return None
 
     # DO ZROBIENIA
     @staticmethod
@@ -145,8 +157,8 @@ class Solver:
             if Puzzle.is_solved(current_puzzle):
                 end = time.time()
                 duration_time = end - start
-                print(duration_time)
-                # DO DOPISANIA: tutaj nalezałoby zapisać do pliku informacje o rozwiązaniu
+                Utils.save_solution_to_file(current_puzzle.moves, visited_states,
+                                            processed_states, max_depth, duration_time)
                 return current_puzzle
 
             available_directions = current_puzzle.get_available_moves()
@@ -164,4 +176,7 @@ class Solver:
                         visited.add(new_state_flat)
                         if len(new_puzzle.moves) > max_depth:
                             max_depth = len(new_puzzle.moves)
-        return False
+        end = time.time()
+        duration_time = end - start
+        Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
+        return None

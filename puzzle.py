@@ -14,6 +14,12 @@ class Puzzle:
             output += " ".join(str(num) for num in row) + "\n"
         return output
 
+    def __lt__(self, other):
+        return len(self.moves) > len(other.moves)
+
+    def __eq__(self, other):
+        return len(self.moves) == len(other.moves)
+
     def find_empty_cell(self):
         empty_row, empty_col = None, None
         for i in range(self.size[0]):
@@ -76,10 +82,3 @@ class Puzzle:
             available_moves.append("R")
 
         return available_moves
-
-    def __lt__(self, other):
-        return len(self.moves) > len(other.moves)
-
-    def __eq__(self, other):
-        return len(self.moves) == len(other.moves)
-
