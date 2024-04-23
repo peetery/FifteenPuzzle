@@ -15,7 +15,6 @@ class Utils:
 
     @staticmethod
     def save_solution_to_file(moves, visited_states_num, processed_states_num, max_reached_depth, calculation_time):
-        rounded_calculation_time = round(calculation_time * 100, 3)
         first_index = sys.argv[4].find('_')
         second_index = sys.argv[4].find('_', first_index + 1)
         third_index = sys.argv[4].find('_', second_index + 1)
@@ -44,7 +43,7 @@ class Utils:
             stats_file.write(f"{visited_states_num}\n")
             stats_file.write(f"{processed_states_num}\n")
             stats_file.write(f"{max_reached_depth}\n")
-            stats_file.write(f"{rounded_calculation_time:.3f}\n")
+            stats_file.write(f"{calculation_time:.3f}")
 
     @staticmethod
     def hamming_distance(state, target_state):

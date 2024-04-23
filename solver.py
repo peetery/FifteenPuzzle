@@ -13,7 +13,7 @@ from utils import Utils
 class Solver:
     @staticmethod
     def bfs(initial_puzzle, search_order):
-        start = time.time()
+        start = time.perf_counter()
         max_depth = 0
         processed_states = 0
         visited_states = 1
@@ -33,7 +33,7 @@ class Solver:
                         if len(new_puzzle.moves) > max_depth:
                             max_depth = len(new_puzzle.moves)
                         if Puzzle.is_solved(new_puzzle):
-                            end = time.time()
+                            end = time.perf_counter()
                             duration_time = end - start
                             Utils.save_solution_to_file(new_puzzle.moves, visited_states,
                                                         processed_states, max_depth, duration_time)
@@ -42,14 +42,14 @@ class Solver:
                             queue.put(new_puzzle)
                             visited.add(new_state_flat)
                             visited_states += 1
-        end = time.time()
+        end = time.perf_counter()
         duration_time = end - start
         Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
         return None
 
     @staticmethod
     def dfs(initial_puzzle, search_order):
-        start = time.time()
+        start = time.perf_counter()
         processed_states = 0
         visited_states = 1
         visited = {}
@@ -69,7 +69,7 @@ class Solver:
             visited[current_state_flat] = current_depth
 
             if Puzzle.is_solved(current_puzzle):
-                end = time.time()
+                end = time.perf_counter()
                 duration_time = end - start
                 Utils.save_solution_to_file(current_puzzle.moves, visited_states,
                                             processed_states, max_depth, duration_time)
@@ -77,7 +77,7 @@ class Solver:
 
             available_directions = current_puzzle.get_available_moves()
             if current_depth < max_allowed_depth:
-                for direction in search_order:
+                for direction in reversed(search_order):
                     if direction in available_directions:
                         new_puzzle = copy.deepcopy(current_puzzle)
                         new_puzzle.move(direction)
@@ -85,7 +85,7 @@ class Solver:
                         visited_states += 1
                         if current_depth + 1 > max_depth:
                             max_depth = current_depth + 1
-        end = time.time()
+        end = time.perf_counter()
         duration_time = end - start
         Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
         return None
@@ -93,7 +93,7 @@ class Solver:
     # DO ZROBIENIA
     @staticmethod
     def a_star_hamming(initial_puzzle):
-        start = time.time()
+        start = time.perf_counter()
         max_depth = 0
         processed_states = 0
         visited_states = 1
@@ -109,7 +109,7 @@ class Solver:
             processed_states += 1
 
             if Puzzle.is_solved(current_puzzle):
-                end = time.time()
+                end = time.perf_counter()
                 duration_time = end - start
                 Utils.save_solution_to_file(current_puzzle.moves, visited_states,
                                             processed_states, max_depth, duration_time)
@@ -130,7 +130,7 @@ class Solver:
                         visited.add(new_state_flat)
                         if len(new_puzzle.moves) > max_depth:
                             max_depth = len(new_puzzle.moves)
-        end = time.time()
+        end = time.perf_counter()
         duration_time = end - start
         Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
         return None
@@ -138,7 +138,7 @@ class Solver:
     # DO ZROBIENIA
     @staticmethod
     def a_star_manhattan(initial_puzzle):
-        start = time.time()
+        start = time.perf_counter()
         max_depth = 0
         processed_states = 0
         visited_states = 1
@@ -154,7 +154,7 @@ class Solver:
             processed_states += 1
 
             if Puzzle.is_solved(current_puzzle):
-                end = time.time()
+                end = time.perf_counter()
                 duration_time = end - start
                 Utils.save_solution_to_file(current_puzzle.moves, visited_states,
                                             processed_states, max_depth, duration_time)
@@ -175,7 +175,7 @@ class Solver:
                         visited.add(new_state_flat)
                         if len(new_puzzle.moves) > max_depth:
                             max_depth = len(new_puzzle.moves)
-        end = time.time()
+        end = time.perf_counter()
         duration_time = end - start
         Utils.save_solution_to_file(None, visited_states, processed_states, max_depth, duration_time)
         return None

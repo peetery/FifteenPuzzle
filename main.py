@@ -1,7 +1,9 @@
 import sys
+import time
 
 from puzzle import Puzzle
 from solver import Solver
+from utils import Utils
 
 if __name__ == '__main__':
     strategy = sys.argv[1]
