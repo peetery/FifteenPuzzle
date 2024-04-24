@@ -3,16 +3,7 @@ import sys
 
 import numpy as np
 
-
 class Utils:
-    @staticmethod
-    def load_puzzle_from_file(filename):
-        with open(filename, 'r') as file:
-            lines = file.readlines()
-            size = tuple(map(int, lines[0].split()))
-            initial_state = [list(map(int, line.split())) for line in lines[1:]]
-            return size, initial_state
-
     @staticmethod
     def save_solution_to_file(moves, visited_states_num, processed_states_num, max_reached_depth, calculation_time):
         first_index = sys.argv[4].find('_')
